@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SHU | Traffic Intelligence Hub</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        :root {
+            --bg-body: #0f172a;
+            --bg-card: #1e293b;
+            --border: #334155;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-purple: #c084fc;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+        }
+
+        body { 
+            background-color: var(--bg-body); 
+            color: var(--text-main); 
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Top Header */
+        .header-nav {
+            background: rgba(30, 41, 59, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .status-badge {
+            font-size: 0.7rem;
+            background: rgba(74, 222, 128, 0.1);
+            color: var(--accent-green);
+            border: 1px solid var(--accent-green);
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            font-weight: 700;
+        }
+
+        /* Layout Structure */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            padding: 2rem;
+        }
+
+        .card-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        /* Metric Typography */
+        .metric-title { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; }
+        .metric-value { font-size: 2.8rem; font-weight: 800; color: var(--accent-blue); margin: 0.5rem 0; }
+        .metric-sub { font-size: 0.85rem; color: var(--text-muted); }
+
+        /* Professional Table Styling (Fixes image_55edf6.png) */
+        .table-responsive { border-radius: 12px; overflow: hidden; margin-top: 1rem; border: 1px solid var(--border); }
+        .table { background: var(--bg-card); color: var(--text-main); margin: 0; }
+        .table thead { background: #0f172a; }
+        .table th { border: none; color: var(--text-muted); font-size: 0.75rem; text-transform: uppercase; padding: 1rem; }
+        .table td { border-top: 1px solid var(--border); padding: 1rem; vertical-align: middle; }
+        .table tr:hover { background: rgba(255,255,255,0.02); }
+
+        /* Status & Priority Tags */
+        .tag { font-size: 0.7rem; font-weight: 700; padding: 4px 8px; border-radius: 6px; }
+        .tag-prio-1 { background: rgba(248, 113, 113, 0.1); color: #f87171; border: 1px solid #f87171; }
+        .tag-prio-2 { background: rgba(251, 191, 36, 0.1); color: #fbbf24; border: 1px solid #fbbf24; }
+        .tag-prio-3 { background: rgba(56, 189, 248, 0.1); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+
+        /* AI Evidence Feed */
+        .evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem; }
+        .evidence-item { background: #0f172a; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+        .evidence-img { width: 100%; height: 110px; object-fit: cover; opacity: 0.9; transition: 0.3s; }
+        .evidence-img:hover { opacity: 1; }
+
+        .ai-label-box {
+            background: rgba(192, 132, 252, 0.1);
+            border: 1px solid var(--accent-purple);
+            color: var(--accent-purple);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<nav class="header-nav d-flex justify-content-between align-items-center">
+    <div>
+        <span class="fw-bold fs-5">SALIM HABIB UNIVERSITY</span>
+        <span class="mx-3 text-muted">|</span>
+        <span class="text-muted small">AI-OS INTELLIGENCE HUB</span>
+    </div>
+    <div class="status-badge">● System Online</div>
+</nav>
+
+<div class="dashboard-grid">
+    <!-- LEFT COLUMN: OPERATING SYSTEM CORE -->
+    <div class="left-col">
+        <h6 class="metric-title mb-3">OS Kernel Diagnostics</h6>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="card-panel">
+                    <div class="metric-title">Avg Waiting Time (AWT)</div>
+                    <div class="metric-value" id="awt">0s</div>
+                    <div class="metric-sub">Process latency in Priority Queue</div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card-panel">
+                    <div class="metric-title">Avg Turnaround Time (ATT)</div>
+                    <div class="metric-value" id="att" style="color: var(--accent-green);">0s</div>
+                    <div class="metric-sub">Full execution cycle (End-to-End)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive mt-4">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Process ID</th>
+                        <th>Class</th>
+                        <th>OS Priority</th>
+                        <th>Scheduler State</th>
+                    </tr>
+                </thead>
+                <tbody id="os-table">
+                    <!-- Live Data Injected Here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- RIGHT COLUMN: AI ANALYTICS & LOGS -->
+    <div class="right-col">
+        <h6 class="metric-title mb-3">AI Computer Vision</h6>
+        <div class="card-panel mb-4" style="border-color: var(--accent-purple);">
+            <div class="metric-title" style="color: var(--accent-purple);">Inference Latency</div>
+            <div class="metric-value" id="lat" style="font-size: 2.2rem; color: var(--accent-purple);">0ms</div>
+            <div id="ai-dist" class="mt-2 d-flex flex-wrap gap-2"></div>
+        </div>
+
+        <h6 class="metric-title mb-3">Violation Evidence Log</h6>
+        <div class="evidence-grid" id="evidence-container">
+            {% for v in violations %}
+            <div class="evidence-item">
+                <img src="/{{ v.image_path }}" class="evidence-img">
+                <div class="p-2 d-flex justify-content-between align-items-center">
+                    <span class="ai-label-box">{{ v.vehicle_type }}</span>
+                    <span style="font-size: 0.6rem; color: var(--text-muted);">#{{ v.track_id }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<script>
+    async function refreshDashboard() {
+        try {
+            const res = await fetch('/get_data');
+            const d = await res.json();
+            
+            // Core Metrics
+            document.getElementById('awt').innerText = d.metrics.awt + 's';
+            document.getElementById('att').innerText = d.metrics.att + 's';
+            document.getElementById('lat').innerText = d.ai_metrics.latency + 'ms';
+
+            // AI Label Badges
+            document.getElementById('ai-dist').innerHTML = Object.entries(d.ai_metrics.counts)
+                .map(([k,v]) => `<span class="badge bg-dark border border-secondary">${k.toUpperCase()}: ${v}</span>`)
+                .join('');
+
+            // OS Kernel Table
+            document.getElementById('os-table').innerHTML = d.processes.map(p => `
+                <tr>
+                    <td class="fw-bold" style="color: var(--accent-blue)">#${p.pid}</td>
+                    <td class="text-uppercase small">${p.type}</td>
+                    <td>
+                        <span class="tag tag-prio-${p.priority}">
+                            ${p.priority === 1 ? 'URGENT' : (p.priority === 2 ? 'PUBLIC' : 'LOW')}
+                        </span>
+                    </td>
+                    <td>
+                        <span class="${p.status === 'Running' ? 'text-success fw-bold' : 'text-muted'} small">
+                            ${p.status.toUpperCase()}
+                        </span>
+                    </td>
+                </tr>`).join('');
+        } catch (e) { console.log("Syncing..."); }
+    }
+    setInterval(refreshDashboard, 2000);
+</script>
+</body>
+</html>
